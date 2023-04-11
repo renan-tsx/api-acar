@@ -1,0 +1,1296 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AlugCar Documentação",
+    "description": "Documentação da API AlugCar",
+    "version": "1.0.0",
+    "contact": {
+      "email": "renan@teste.com"
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a user",
+        "description": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { "$ref": "#definitions/User" },
+                "$ref": "#example/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" },
+          "403": { "$ref": "#responses/users/post/403" },
+          "409": { "description": "User Already exists!" }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all users",
+        "description": "List all users",
+        "responses": {
+          "200": { "$ref": "#/responses/users/get/200"},
+          "204": { "description": "No existing users!"}
+        }
+      }
+    },
+    "/users/avatar": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Update a user",
+        "description": "Update an existing user",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["avatar"]
+              }
+            }
+          }      
+        },
+        "responses": {
+          "204": { "description": "User updated success!" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "404": { "description": "User does not exists!" }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a sessions",
+        "description": "Create a new temporary sessions",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { "$ref": "#definitions/Session" },
+                "$ref": "#example/Session"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#/responses/sessions/post/201" },
+          "401": { "$ref": "#/responses/sessions/post/401" }
+        }
+      }
+    },
+    "/categories": {
+      "post": {
+        "tags": ["Categories"],
+        "summary": "Create a category",
+        "description": "Create a new category",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { "$ref": "#definitions/Categories" },
+                "$ref": "#example/Categories"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "403": { "$ref": "#/responses/categories/post/403" },
+          "409": { "$ref": "#/responses/categories/post/409" }
+        }
+      },
+      "get": {
+        "tags": ["Categories"],
+        "summary": "List all categories",
+        "description": "List all categories",
+        "security": [],
+        "responses": {
+          "200": { "$ref": "#/responses/categories/get/200" },
+          "204": { "description": "No Content" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "403": { "$ref": "#/responsesDefault/403" }
+        }
+      }
+    },
+    "/categories/import": {
+      "post": {
+        "tags": ["Categories"],
+        "summary": "Upload a new category",
+        "description": "Upload a new category",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "file",
+                    "formar": "binary"
+                  }
+                }
+              }
+            }
+          }      
+        },
+        "responses": {
+          "200": { "$ref": "#/responses/categories-import/200" },
+          "400": { "$ref": "#/responses/categories-import/400" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "403": { "$ref": "#/responsesDefault/403" }
+        }
+      }
+    },
+    "/categories/download": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "Download model CSV",
+        "description": "Download model CSV",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "body": {
+              "content-disposition": {
+                "type": "CSV",
+                "description": "model_import_category"
+              }
+            }
+          },
+          "500": { "description": "Internal server error!" }
+        }
+      }
+    },
+    "/specifications": {
+      "post": {
+        "tags": ["Specifications"],
+        "summary": "Create a specification",
+        "description": "Create a new specification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { "$ref": "#definitions/Specifications" },
+                "$ref": "#example/Specifications"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "403": { "$ref": "#/responsesDefault/403" },
+          "409": { "description": "Specification Already exists" }
+        }
+      },
+      "get": {
+        "tags": ["Specifications"],
+        "summary": "List all spefifications",
+        "description": "List all spefifications",
+        "responses": {
+          "200": { "$ref": "#/responses/specifications/get/200" },
+          "204": { "description": "No content" }
+        }
+      }
+    },
+    "/cars": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Create a car",
+        "description": "Create a new car",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { "$ref": "#definitions/Car" },
+                "$ref": "#example/Car"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#/responses/cars/post/200" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "409": { "description": "Car Already exists!" },
+          "403": { "$ref": "#responsesDefault/403" }
+        }
+      },
+      "get": {
+        "tags": ["Cars"],
+        "summary": "List all car",
+        "description": "List all car",
+        "security": [], 
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "$ref": "#responses/cars/get/200" }
+        }
+      }
+    },
+    "/cars/specifications/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Create a specifications",
+        "description": "Create a new specifications",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { 
+                  "type": "array",
+                  "specifications_id": "string"
+                 },
+                "example": {
+                  "specifications_id": [
+                    "7a77878b-ca5b-49ef-98e2-ade4b36dc864",
+                    "61c410ad-ded6-4905-8ca1-26c2aab23ea2"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#responses/cars-specification/post/201" },
+          "204": { "description": "No Content" },
+          "401": { "$ref": "#responsesDefault/401" },
+          "403": { "$ref": "#responsesDefault/403" }
+        }
+      }
+    },
+    "/cars/images/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Add images to cart",
+        "description": "Add one or more images to the cart",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                    
+                  }
+                },
+                "required": ["images"]
+              }
+            }
+          }      
+        },
+        "responses": {
+          "200": { "$ref": "#/responses/cars-images/post/200" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "403": { "$ref": "#/responsesDefault/403" },
+          "404": { "$ref": "#/responses/cars-images/post/404" }
+        }
+      }
+    },
+    "/rentals": {
+      "post": {
+        "tags": ["Rentals"],
+        "summary": "Create a rentals",
+        "description": "Create a new rentals",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": { "$ref": "#definitions/Rentals" },
+                "$ref": "#example/Rentals"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#/responses/rentals/post/201" },
+          "401": { "$ref": "#/responsesDefault/401" },
+          "409": { "$ref": "#/responses/rentals/post/409" }
+        }
+      },
+      "get": {
+        "tags": ["Rentals"],
+        "summary": "Get Rentals by user id",
+        "description": "Get Rentals by id, must be authenticated to get user id",
+        "responses": {
+          "200": { "$ref": "#/responses/rentals/get/200" },
+          "401": { "$ref": "#/responsesDefault/401" }
+        }
+      }
+    },
+    "rentals/devolution/{id}": {
+      "post": {
+        "tags": ["Rentals"],
+        "summary": "Create a rentals",
+        "description": "Create a new rentals",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": { "$ref": "#/responses/rentals-devolution/post/200" },
+          "204": { "description": "No Content" },
+          "400": { "$ref": "#/responses/rentals-devolution/post/400" },
+          "401": { "$ref": "#/responsesDefault/401" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "driver_license": {
+          "type": "string"
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Categories": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "CategoryDownload": {
+      "type": "object",
+      "properties": {
+        "file CSV": {
+          "type": "file",
+          "formar": "binary"
+        }
+      }
+    },
+    "Specifications": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "Car": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "daily_rate": {
+          "type": "number"
+        },
+        "license_plate": {
+          "type": "string"
+        },
+        "fine_amount": {
+          "type": "number"
+        },
+        "brand": {
+          "type": "string"
+        },
+        "category_id": {
+          "type": "string"
+        }
+      }
+    },
+    "Rentals": {
+      "type": "object",
+      "properties": {
+        "car_id": {
+          "type": "string"
+        },
+        "expected_return_date": {
+          "type": "string"
+        }
+      }
+    },
+    "RentalsResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "car_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "expected_return_date": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "update_at": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responsesDefault": {
+    "401": {
+      "description": "Unauthorized",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Invalid token!"
+              }
+            }
+          }
+        }
+      }
+    },
+    "403": {
+      "description": "Forbidden",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "User isn't admin!"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "users": {
+      "post": {
+        "403": { "$ref": "#responsesDefault/403" }
+      },
+      "get": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {          
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "6dc790a7-516d-4e7f-b2e7-044d85e904cb"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "João"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "joao@email.com"
+                    },
+                    "driver_license": {
+                      "type": "string",
+                      "example": "1021578-x"
+                    },
+                    "is_admin?": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "Essa propriedade só será exibida para usuários com permissões de administrador."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sessions": {
+      "post": {
+        "201": { 
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODAzNjY0MjcsImV4cCI6MTY4MDQ1MjgyNywic3ViIjoiZTI3ZDQ0ZTEtZjg2OC00MmJlLThhZmItZTQ0OTgwM2JmNWVhIn0.nnCskLVd2onelLE7-oxqD6p0hzf-asmnjf45455"
+                  },
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "João"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "joao@email.com"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": { 
+          "description": "Unauthorized",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Email or password incorrect!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "categories": {
+      "post": {
+        "403": { "$ref": "#responsesDefault/403"},
+        "409": {
+          "description": "Conflict",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Category Already exists!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "9e2a2c2f-4fd1-4930-af9f-018f8930629d"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Sedan"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Carro de porta malas grande"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2023-03-30T12:59:50.165Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "categories-import": {
+      "200": { 
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type?": {
+                    "type": "string",
+                    "enum": ["created", "exists"],
+                    "description": "If the category was created, the 'type' property receives 'created', otherwise 'type' receives 'exists'"      
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "SUV"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Empty or badly fomatted file!"
+                },
+                "model": {
+                  "type": "string",
+                  "example": "http://localhost:4444/categories/download"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "specifications": {
+      "get": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {          
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Câmbio automático"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Carro com troca de marcha automática"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cars": {
+      "post": {
+        "200": { 
+          "description": "Created", 
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "03df0ca3-5c14-41f5-b8bb-4e6adba3d6be"
+                  },
+                  "available": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Audi A3"
+                  },
+                  "daily_rate": {
+                    "type": "number",
+                    "example": 300
+                  },
+                  "license_plate": {
+                    "type": "string",
+                    "example": "AAA-3333"
+                  },
+                  "fine_amount": {
+                    "type": "number",
+                    "example": 300
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "Audi"
+                  },
+                  "category_id": {
+                    "type": "string",
+                    "example": "e62740f8-ea56-4520-a87e-2af1fcb12db6"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "example": "2023-04-03T14:37:35.095Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items":         {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "f2963100-3574-404d-97af-f4cd9e8a1c0f"
+                    },
+                    "available": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "X6"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Carro descrição X6"
+                    },
+                    "daily_rate": {
+                      "type": "string",
+                      "example": "300"
+                    },
+                    "license_plate": {
+                      "type": "string",
+                      "example": "BBB-1111"
+                    },
+                    "fine_amount": {
+                      "type": "string",
+                      "example": "200"
+                    },
+                    "brand": {
+                      "type": "string",
+                      "example": "BMW"
+                    },
+                    "category_id?": {
+                      "type": "string",
+                      "example": "e62740f8-ea56-4520-a87e-2af1fcb12db6",
+                      "description": "The field returns the ID value or null"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2023-03-30T16:05:23.164Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cars-images": {
+      "post": {
+        "200": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imagesSaved": {
+                    "type": "array",
+                    "example": ["frente.png", "lado_esquerdo.png" ]
+                  },
+                  "imagesAlreadyExists": {
+                    "type": "array",
+                    "example": ["interior.png"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": { 
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Car not found or invalid car id!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cars-specification": {
+      "post": {
+        "201": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "f2963100-3574-404d-97af-f4cd9e8a1c0f"
+                  },
+                  "available": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "X6"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Carro descrição X6"
+                  },
+                  "daily_rate": {
+                    "type": "string",
+                    "example": "300"
+                  },
+                  "license_plate": {
+                    "type": "string",
+                    "example": "BBB-1111"
+                  },
+                  "fine_amount": {
+                    "type": "string",
+                    "example": "200"
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "BMW"
+                  },
+                  "category_id?": {
+                    "type": "string",
+                    "example": "6a97f154-5bf8-4ec5-821f-6c2892cf3fd9",
+                    "description": "The field returns the ID value or null"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "example": "2023-03-30T16:05:23.164Z"
+                  },
+                  "specifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "4502ec77-47c3-451d-aeb8-174d714e0a7f"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "brindado 200"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Carro com 100% blindado"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-03-30T12:59:24.966Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rentals": {
+      "post": {
+        "201": { 
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "66a09c93-bbbf-4da4-a610-b956b5cc832d"
+                  },
+                  "car_id": {
+                    "type": "string",
+                    "example": "b30849f9-7881-427e-b183-443b658dd087"
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "example": "e27d44e1-f868-42be-8afb-e449803bf5ea"
+                  },
+                  "expected_return_date": {
+                    "type": "string",
+                    "example": "2023-04-31T21:32:55.370Z"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "example": "2023-04-01T15:10:28.482Z"
+                  },
+                  "update_at": {
+                    "type": "string",
+                    "example": "2023-04-01T15:10:28.482Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Conflict",
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "Car is unavailable!"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "There`s a rental in progress for user!"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        } 
+      },
+      "get": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { 
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "66a09c93-bbbf-4da4-a610-b956b5cc832d"
+                    },
+                    "car_id": {
+                      "type": "string",
+                      "example": "b30849f9-7881-427e-b183-443b658dd087"
+                    },
+                    "user_id": {
+                      "type": "string",
+                      "example": "e27d44e1-f868-42be-8afb-e449803bf5ea"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "example": "2023-04-01T15:10:28.482Z"
+                    },
+                    "end_date?": {
+                      "type": "string",
+                      "example": "",
+                      "decription": "The field returns the ID value or null"
+                    },
+                    "expected_return_date": {
+                      "type": "string",
+                      "example": "2023-05-01T21:32:55.370Z"
+                    },
+                    "total?": {
+                      "type": "string",
+                      "example": "500",
+                      "decription": "The field returns the value or null"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2023-04-01T15:10:28.482Z"
+                    },
+                    "update_at": {
+                      "type": "string",
+                      "example": "2023-04-01T15:10:28.482Z"
+                    },
+                    "car": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "b30849f9-7881-427e-b183-443b658dd087"
+                        },
+                        "available": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "X6"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Carro descrição X6"
+                        },
+                        "daily_rate": {
+                          "type": "string",
+                          "example": "300"
+                        },
+                        "license_plate": {
+                          "type": "string",
+                          "example": "BBB-7777"
+                        },
+                        "fine_amount": {
+                          "type": "string",
+                          "example": "200"
+                        },
+                        "brand": {
+                          "type": "string",
+                          "example": "BMW"
+                        },
+                        "category_id?": {
+                          "type": "string",
+                          "example": "hr40820a-e064-4809-92ff-a6c93g4fr671",
+                          "decription": "The field returns the ID value or null"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-03-30T16:23:15.287Z"
+                        }
+                      }
+                    }
+                  }         
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rentals-devolution": {
+      "post": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "car_id": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "start_date": {
+                    "type": "string"
+                  },
+                  "end_date": {
+                    "type": "string"
+                  },
+                  "expected_return_date": {
+                    "type": "string"
+                  },
+                  "total": {
+                    "type": "number"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "update_at": {
+                    "type": "string"
+                  }
+                }       
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Invalid input syntax for type uuid!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Specifications": {
+      "example": {
+        "name": "Câmbio automático",
+        "description": "Carro com troca de marcha automática"
+      }
+    },
+    "Rentals": {
+      "example": {
+        "car_id": "b30849f9-7881-427e-b183-443b658dd087",
+        "expected_return_date": "2023-03-31T21:32:55.370Z"
+      }
+    },
+    "Car": {
+      "example": {
+        "name": "Audi A3",
+        "description": "Carro descrição Audi A3",
+        "daily_rate": 300.00,
+        "license_plate": "AAA-3333",
+        "fine_amount": 200.00,
+        "brand": "Audi",
+        "category_id": "dbf95617-da3b-460f-b2d7-9c63b3c93bbe"
+      }
+    },
+    "Categories": {
+      "example": {
+        "name": "SEDAN",
+        "description": "Carro com porta mala grande"
+      }
+    },
+    "Session": {
+      "example": {
+        "email": "seu@email.com",
+        "password": "suasenha"
+      }
+    },
+    "User": {
+      "example": {
+        "name": "Seu nome",
+        "email": "seu@email.com",
+        "password": "suasenha",
+        "driver_license": "sua carteira de motorista"
+      }
+    }
+  }
+}
