@@ -22,7 +22,7 @@ const ormconfig = {
 
 const json = JSON.stringify(ormconfig, null, 2);
 
-fs.writeFile('ormconfig.json', json, (err) => {
+fs.writeFile('ormconfig.json', json, { flag: 'w' }, (err) => {
   err
     ? console.error('Erro ao gerar ormconfig.json: ' + err)
     : console.log('Gerado ormconfig.json')
