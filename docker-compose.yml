@@ -12,18 +12,18 @@ services:
     container_name: database_acar
     restart: always
     ports:
-      - 5432:5432
+      - ${PORT_HOST}:${PORT_DOCKER}
     environment:
-      - POSTGRES_USER=dockeruser
-      - POSTGRES_PASSWORD=dockerpass
-      - POSTGRES_DB=acar
-      - PGPASSWORD=dockerpass
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGPASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/data/postgres
     networks:
       - postgresql-network
     healthcheck:
-      test: ["CMD", "psql", "-U", "dockeruser", "-h", "database_acar", "-d", "acar", "-c", "SELECT 1;", "-q"]
+      test: ["CMD", "psql", "-U", "${POSTGRES_USER}", "-h", "database_acar", "-d", "${POSTGRES_DB}", "-c", "SELECT 1;", "-q"]
       interval: 1m
       timeout: 10s
       retries: 5
@@ -33,7 +33,7 @@ services:
     container_name: app_acar
     restart: always
     ports:
-      - 4444:4444
+      - ${APP_PORT}:${APP_PORT}
     volumes:
       - .:/usr/app
     networks:
@@ -43,7 +43,7 @@ services:
     depends_on:
       - database_acar
     healthcheck:
-      test: wget --quiet --tries=1 --spider http://localhost:4444/healthcheck || exit 1
+      test: wget --quiet --tries=1 --spider http://localhost:${APP_PORT}/healthcheck || exit 1
       interval: 2s
       timeout: 1s
       retries: 3

@@ -5,6 +5,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 4444
+EXPOSE ${APP_PORT}
 
 CMD ["npm", "run", "dev"]
