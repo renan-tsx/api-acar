@@ -7,6 +7,7 @@ import createConnection from "../index";
 async function create() {
   const id = uuidv4();
   const connection = await createConnection('localhost');
+  console.log(connection.options)
   const password = await hash("admin", 8);
 
   const user = await connection.getRepository(User)

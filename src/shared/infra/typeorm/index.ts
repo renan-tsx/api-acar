@@ -17,15 +17,16 @@ import { Connection, createConnection, getConnectionOptions } from "typeorm";
 
 export default async(host = "database_acar"): Promise<Connection> => {
   const defaultOptions = await getConnectionOptions();
-
-  return createConnection(
+  const conection = await createConnection(
     Object.assign(defaultOptions, {
-      host: process.env.NODE_ENV === "test"
-        ? "localhost"
-        : host,
+      host: process.env.DISK === "s3"
+      ? "localhost"
+      : host,
       database: process.env.NODE_ENV === "test"
-        ? "acar_test"
-        : defaultOptions.database,
+      ? "acar_test"
+      : defaultOptions.database,
     })
-  );
+    );
+
+  return conection;
 }
