@@ -9,8 +9,6 @@ export class RefreshTokenController {
       request.query.token ||
       request.headers["x-access-token"]
 
-      console.log("token", token)
-
     const refreshTokenUseCase = container.resolve(RefreshTokenUseCase);
 
     const refresh_token = await refreshTokenUseCase.execute(token);
