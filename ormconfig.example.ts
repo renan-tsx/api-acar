@@ -3,13 +3,14 @@ import fs from "fs";
 
 dotenv.config();
 
-const path = process.env.disk === "local" ? "src" : "dist"
-const extension = process.env.disk === "local" ? "*.ts" : "*.js"
+const path = process.env.DISK === "local" ? "src" : "dist"
+const extension = process.env.DISK === "local" ? "*.ts" : "*.js"
+const port = process.env.DISK === "local" ? process.env.PORT_DOCKER : process.env.PORT_HOST
 
 const ormconfig = {
   "type": "postgres",
   "host": "localhost",
-  "port": parseInt(process.env.PORT_DOCKER),
+  "port": parseInt(port),
   "username": process.env.POSTGRES_USER,
   "password": process.env.POSTGRES_PASSWORD,
   "database": process.env.POSTGRES_DB,
