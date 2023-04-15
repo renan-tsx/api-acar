@@ -19,7 +19,7 @@ export default async(host = "database_acar"): Promise<Connection> => {
   const defaultOptions = await getConnectionOptions();
   const conection = await createConnection(
     Object.assign(defaultOptions, {
-      host: process.env.DISK === "s3"
+      host: process.env.DISK === "s3" || process.env.NODE_ENV === "test"
       ? "localhost"
       : host,
       database: process.env.NODE_ENV === "test"
