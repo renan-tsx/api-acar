@@ -1,7 +1,5 @@
-import dotenv from "dotenv";
+import 'dotenv/config';
 import fs from "fs";
-
-dotenv.config();
 
 const path = process.env.DISK === "local" ? "src" : "dist"
 const extension = process.env.DISK === "local" ? "*.ts" : "*.js"
