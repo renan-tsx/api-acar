@@ -12,7 +12,7 @@ let connection: Connection;
 describe("Criar CategoryController", () => {
 
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await createConnection("localhost");
 
     const query = "SELECT datname FROM pg_database WHERE datname='acar_test';"
     const dataBaseExists = await connection.query(query);
